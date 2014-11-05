@@ -2,9 +2,82 @@
 <html>
 <head>
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	
+<script src="waypoints.min.js"></script>
+<script src="waypoints-infinite.min.js"></script>
+
+	<script type="text/javascript">
+		var count = 0;
+		var getNum = 4;
+		var news = [];
+		var $plh;
+		var opts = {offset: '90%'}
+		function dateSort(a, b){
+			return new Date(b.published) - new Date(a.published);
+		}
+		function loadMore(event, direction){
+			$('#load_more').waypoint('destroy');
+			console.log('event: ' + event + ', direction: ' + direction);
+			if(news.length > 0 && count < news.length){
+				
+				$(news.slice(count, count+getNum)).each(function(){
+					var date = new Date(this.published);
+					$plh.append('<div class="news_wrapper clearfix"><div class="news_title col-xs-12 col-sm-8">' + this.title + '</div>' + '<div class="news_date col-xs-12 col-sm-4">' + date.toLocaleString() + '</div></div>');
+					count++;
+				});
+				$('#load_more').waypoint(loadMore, opts);
+			}
+			else{
+				$('#load_more').hide();
+			}
+		}
+		$(document).ready(function(){
+			$plh = $('#content_wrapper');
+			$.get("http://www.stellarbiotechnologies.com/media/press-releases/json?", function(data){
+				news = data.news.sort(dateSort);
+				$(news).each(function(){
+					var date = new Date(this.published);
+					
+					$plh.append('<div class="news_wrapper clearfix"><div class="news_title col-xs-12 col-sm-8">' + this.title + '</div>' + '<div class="news_date col-xs-12 col-sm-4">' + date.toLocaleString() + '</div></div>');
+					count++;
+					if($('.news_wrapper:last-child').offset().top > $(window).height()){
+						
+						console.log(count);
+						
+						return false;
+					}
+					//console.log($ + ', ' + $(window).height());
+				});
+				$('#load_more').waypoint(loadMore, opts);
+				
+			});
+			
+			
+		});
+		
+		
+		
+		
+	</script>
+	
 </head>
 
 <body>
+
+<div class="container">
+
+	<div class="row">
+		<div id="content_wrapper" class=" col-lg-12 clearfix">
+			
+		</div>
+		<div id="load_more" class="col-lg-12">LOADING....</div>
+	</div>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+</div>
 
 </body>
 </html>
