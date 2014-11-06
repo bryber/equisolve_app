@@ -2,6 +2,28 @@
 <html>
 <head>
 
+<style>
+
+.news_wrapper{
+	padding: 20px 0px;
+	border-bottom: 1px solid #eee;
+	}
+.news_wrapper:last-child{
+	border:0;
+}
+	.news_title{
+		font-size:1.3em;
+		color:#333;
+	}
+	.news_date{
+		color:#aaa;
+	}
+	
+	#load_more{
+		padding:50px;
+	}
+</style>
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -15,7 +37,7 @@
 		var getNum = 4;
 		var news = [];
 		var $plh;
-		var opts = {offset: '90%'}
+		var opts = {offset: '95%'}
 		function dateSort(a, b){
 			return new Date(b.published) - new Date(a.published);
 		}
@@ -26,7 +48,9 @@
 				
 				$(news.slice(count, count+getNum)).each(function(){
 					var date = new Date(this.published);
-					$plh.append('<div class="news_wrapper clearfix"><div class="news_title col-xs-12 col-sm-8">' + this.title + '</div>' + '<div class="news_date col-xs-12 col-sm-4">' + date.toLocaleString() + '</div></div>');
+					var $e = $('<div style="opacity:0;" class="news_wrapper clearfix"><div class="news_title col-xs-12 col-sm-8">' + this.title + '</div>' + '<div class="news_date col-xs-12 col-sm-4">' + date.toLocaleString() + '</div></div>');
+					$plh.append($e);
+					$e.fadeTo(1200,1)
 					count++;
 				});
 				$('#load_more').waypoint(loadMore, opts);
@@ -69,14 +93,15 @@
 <body>
 
 <div class="container">
-
+<h1>News Feed</h1>
 	<div class="row">
+		
 		<div id="content_wrapper" class=" col-lg-12 clearfix">
 			
 		</div>
-		<div id="load_more" class="col-lg-12">LOADING....</div>
+		<div id="load_more" class="col-lg-12" style="text-align:center;"><img src="loading.gif" /></div>
 	</div>
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
 </div>
 
 </body>
